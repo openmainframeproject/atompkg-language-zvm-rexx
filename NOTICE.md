@@ -1,4 +1,4 @@
-# language-zvm-names package 
+# language-zvm-rexx package
 
 ### Copyrights
 
