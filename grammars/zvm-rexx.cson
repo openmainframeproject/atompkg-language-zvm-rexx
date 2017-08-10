@@ -1,0 +1,272 @@
+
+# Change summary
+# - Wrote syntax rules based on Walter Church's internal set, then re-wrote
+#   many of them based on:
+#   z/VM 6.4 CMS Commands and Utilities Reference, NAMEFIND command, usage note 3
+
+# After editing this file, CTL-SHIFT-F5 or C-S-P window:reload to update the active editor with the revised grammar.
+# editor:log-cursor-scope to see which selectors (example: comment.block.names) the grammar applies at the cursor's location.
+
+# Todo: highlight commas, end parens, etc.  Adding a \\b rule really hosed things, no matter its placement.
+
+'scopeName': 'source.REXX'
+'name': 'REXX'
+# VMDT is used by the VM Dump Tool for files written in Rexx
+'fileTypes': ['REXX','EXEC','EXEC2','VMDT']
+
+'patterns': [
+    # Comments are recursively defined (nesting allowed), so include a single
+    # recursive rule instead of duplicating the parsing here and then a second
+    # time (to handle nesting) in the repository
+    { 'include': '#comment-rule' },
+    { 'include': '#number-rule' },
+    { 'include': '#label-rule' },
+    { 'include': '#single-quoted-string-rule' },
+    { 'include': '#double-quoted-string-rule' },
+    { 'include': '#address-keyword-instruction-rule' },
+    { 'include': '#call-off-keyword-instruction-rule' },
+    { 'include': '#call-on-keyword-instruction-rule' },
+    { 'include': '#signal-off-keyword-instruction-rule' },
+    { 'include': '#signal-on-keyword-instruction-rule' },
+    { 'include': '#signal-value-keyword-instruction-rule' },
+    { 'include': '#numeric-digits-keyword-instruction-rule' },
+    { 'include': '#numeric-form-keyword-instruction-rule' },
+    { 'include': '#numeric-fuzz-keyword-instruction-rule' },
+    { 'include': '#parse-keyword-instruction-rule' },
+    { 'include': '#procedure-keyword-instruction-rule' },
+    # More generic rules last
+    { 'include': '#targeted-control-keyword-instruction-rule' },
+    # TODO: DO/end
+    { 'include': '#do-forever-rule' },
+    { 'include': '#do-repetitive-rule' },
+    # TODO: select
+    { 'include': '#simple-control-keyword-instruction-rule' },
+    { 'include': '#simple-other-keyword-instruction-rule' },
+    { 'include': '#special-variables-rule' },
+    { 'include': '#function-names-rule' },
+    { 'include': '#operators-rule' },
+]
+
+'holding-area-patterns': [
+    { # Arwe: looks like a sequence number ... why mapped to type?
+      'match': '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\\n'
+      'name': 'entity.name.type.rexx'
+    },
+    { # Rexx DO keyword instruction operands - 6.4
+      'match': '\\b((?i)by|end|for|forever|to|until|while)\\b(\\s*)'
+      'name': 'keyword.control.rexx'
+    },
+    { # Rexx SELECT keyword instruction operands - 6.4
+      'match': '\\b((?i)end|otherwise|then)\\b(\\s*)'
+      'name': 'keyword.control.rexx'
+    },
+]
+
+'repository': {
+    'number-rule': {
+        # Arwe: note that Rexx numbers are more general, e.g. E notation/signs
+        # TODO: Handle more/general Rexx number formats
+        'match': '\\b(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))\\b'
+        'name': 'constant.numeric.rexx'
+    },
+    'comment-rule': { # Comments, including nested comments
+      # Comments are recursively defined (nesting allowed), so include a single
+      # recursive rule instead of duplicating the parsing.
+      'begin': '/\\*'
+      'beginCaptures':
+        '0':
+          'name': 'punctuation.definition.comment.begin.rexx'
+      'end': '\\*/'
+      'endCaptures':
+        '0':
+          'name': 'punctuation.definition.comment.end.rexx'
+      'name': 'comment.block.rexx'
+      'patterns': [
+          {
+            'include': '#working-comment-rule'
+          }
+      ]
+    },
+    'label-rule': {
+        # Handles only the simplest case: optional whitespace, symbol, optional whitespace, colon
+        # TODO: Try to handle additional cases, like end-comment preceding label on same source line
+        # TODO: add cent sign to allowed characters
+        'match': '\\s*[A-za-z0-9@#$.!?]+\\s*:'
+        'name': 'entity.name.rexx'
+    },
+    'single-quoted-string-rule': {
+      # No need to handle embedded escaped quotes as a special case.
+      # Visually they look like two consecutive strings, and that's fine.
+      'begin': '\''
+      'beginCaptures':
+          '0':
+              'name': 'punctuation.definition.string.begin.rexx'
+      'end': '\''
+      'endCaptures':
+          '0':
+              'name': 'punctuation.definition.string.end.rexx'
+      'name': 'string.quoted.single.rexx'
+      'patterns': [
+          { #PIPE
+            'include': '#working-pipeline-rule'
+            'name': 'support.function.rexx'
+          }
+      ]
+    },
+    'double-quoted-string-rule': {
+      # No need to handle embedded escaped quotes as a special case.
+      # Visually they look like two consecutive strings, and that's fine.
+      'begin': '"'
+      'beginCaptures':
+          '0':
+              'name': 'punctuation.definition.string.begin.rexx'
+      'end': '"'
+      'endCaptures':
+          '0':
+              'name': 'punctuation.definition.string.end.rexx'
+      'name': 'string.quoted.single.rexx'
+      'patterns': [
+          { #PIPE
+            'include': '#working-pipeline-rule'
+            'name': 'support.function.rexx'
+          }
+      ]
+    },
+    'simple-other-keyword-instruction-rule': {
+      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper)\\b'
+      'name': 'keyword.other.rexx'
+    },
+    'simple-control-keyword-instruction-rule': {
+      'match': '\\b((?i)call|do|end|exit|if|then|else|interpret|iterate|return|select|when|otherwise)\\b'
+      'name': 'keyword.control.rexx'
+    },
+        # TODO: add cent sign to allowed characters
+    'targeted-control-keyword-instruction-rule': {
+      'match': '\\b((?i)call|iterate|leave|signal)(\\s+([A-za-z0-9@#$.!?]+))?\\b'
+      'captures': {
+        '1': { 'name': 'keyword.control.rexx'},
+        '2': { 'name': 'entity.name.rexx'},
+      }
+    },
+    'address-keyword-instruction-rule': {
+      'match': '\\b((?i)address)\\s+((?i)value|cmsmixed|cms|command)?'
+      'name': 'keyword.other.rexx'
+    },
+    # TODO: Look into combining call on/off by exploiting regex lookahead
+    #       (if 'on' matched then allow 'name')
+    'call-off-keyword-instruction-rule': {
+      'match': '\\b((?i)call)\\s+((?i)off)\\s+((?i)error|halt|failure|notready)'
+      'name': 'keyword.control.rexx'
+    },
+    # TODO: Use captures to highlight name differently
+    'call-on-keyword-instruction-rule': {
+      'match': '\\b((?i)call)\\s+((?i)on)\\s+((?i)error|halt|failure|notready)(\\s+((?i)name))?\\s+'
+      'name': 'keyword.control.rexx'
+    },
+    # TODO: Look into combining signal on/off by exploiting regex lookahead
+    #       (if 'on' matched then allow 'name')
+    'signal-off-keyword-instruction-rule': {
+      'match': '\\b((?i)signal)\\s+((?i)off)\\s+((?i)error|halt|failure|notready|novalue|syntax)'
+      'name': 'keyword.control.rexx'
+    },
+    # TODO: Use captures to highlight name differently
+    'signal-on-keyword-instruction-rule': {
+      'match': '\\b((?i)signal)\\s+((?i)on)\\s+((?i)error|halt|failure|notready|novalue|syntax)(\\s+((?i)name))?\\s+'
+      'name': 'keyword.control.rexx'
+    },
+    # TODO: See if "signal label" syntax is distinguishable from signal expression, highlight label if so
+    'signal-value-keyword-instruction-rule': {
+      'match': '\\b((?i)signal)(\\s+((?i)value))?\\b'
+      'name': 'keyword.other.rexx'
+    },
+    'numeric-digits-keyword-instruction-rule': {
+      'match': '\\b((?i)numeric)\\s+((?i)digits)\\b'
+      'name': 'keyword.other.rexx'
+    },
+    'numeric-form-keyword-instruction-rule': {
+      'match': '\\b((?i)numeric)\\s+((?i)form)(\\s+((?i)scientific|engineering|value))?\\b'
+      'name': 'keyword.other.rexx'
+    },
+    'numeric-fuzz-keyword-instruction-rule': {
+      'match': '\\b((?i)numeric)\\s+((?i)fuzz)\\b'
+      'name': 'keyword.other.rexx'
+    },
+    # TODO: Consider breaking parse value into a separate rule, to highlight optional WITH sub-keyword
+    'parse-keyword-instruction-rule': {
+      'match': '\\b((?i)parse)(\\s+((?i)upper))?\\s+((?i)arg|external|linein|numeric|pull|source|value|var|version)\\s+'
+      'name': 'keyword.other.rexx'
+    },
+    'procedure-keyword-instruction-rule': {
+      'match': '\\b((?i)procedure)(\\s+((?i)expose))?\\b'
+      'name': 'keyword.other.rexx'
+    },
+    'special-variables-rule': {
+      'match': '\\b((?i)rc|result|sigl)\\b'
+      'name': 'support.variable.rexx'
+    },
+    'operators-rule': {
+      'match': '='
+      'name': 'keyword.operator.rexx'
+    },
+    # TODO: add cent sign to allowed characters
+    # "name" followed by open-parenthesis with NO intervening whitespace is Rexx's definition of a function call
+    'function-names-rule': {
+      'match': '\\b([A-za-z0-9@#$.!?]+)(\\()'
+      'captures': {
+        '1': { 'name': 'entity.name.function.rexx'},
+        '2': { 'name': 'punctuation.definition.parameters.begin.rexx'},
+      }
+    },
+    'do-forever-rule': {
+      'match': '\\b((?i)do)\\s+((?i)forever)(\\s+((?i)while|until)\\s+)?'
+      'name': 'keyword.control.rexx'
+    },
+}
+
+'holding-area-repository': {
+    # This rule is carefully(?) constructed to only handle 'do name=expri ...' loops.
+    # The simplest repetitive loop 'do expr' only needs 'do' highlighted, and that's handled in the 'simple keyword' rule
+    # Uses 'captures' to highlight only the reserved words (do, by, for, to, while, until)
+    # The for/by/to expressions are uncaptured because of their groups are (?:...) instead of (...)
+    # TODO: Change to begin/end?  All of the expressions lose their "other" highlighting (strings, numbers).
+    # Rule is disabled (by placing it in this unused object 'holding-area-repository') since the loss of
+    # reserved word highlighting is less-bad than the loss of the string/number highlighting in the expressions.
+    # Also DID try re-ordering the top level patterns[] so the number-rule ran after this rule; no help with lost highlighting.
+    'do-repetitive-rule': {
+      'match': '\\b(((?i)do))\\s+(?:[A-za-z0-9@#$.!?]+)\\s*=\\s*(?:\\S+)((\\s+(?i)to\\s+)(?:\\S+))?((\\s+(?i)by\\s+)(?:\\S+))?((\\s+(?i)for\\s+)(?:\\S+))?(\\s+((?i)while|until)\\s+)?'
+      'captures': {
+        '2': { 'name': 'keyword.control.rexx'},
+        '4': { 'name': 'keyword.control.rexx'},
+        '6': { 'name': 'keyword.control.rexx'},
+        '8': { 'name': 'keyword.control.rexx'},
+        '10': { 'name': 'keyword.control.rexx'},
+      }
+    },
+    'work-in-progress-pipeline-rule': {
+        # Only call this within the context of a string (which might be a pipeline invocation)
+        # Should be PIPE[LINE] *followed by* an optional (options) then a sequence of stages.
+        # Testing revealed: begin= values are tricky, even when only called for ' strings
+        # - \\b in front works
+        # - ^ in front = no match
+        # - ' in front, with optional surrounding whitespace = no match
+        'begin': '\\s*[\']\\s*((?i)PIPE(LINE)?)\\b'
+        # Testing revealed: end= .* does match "to the end of the enclosing string" as one
+        #   might expect.  It pulls in characters past the end of string.
+        'end'  : '.*'
+        'name': 'support.function.rexx'
+        'patterns': {
+
+        }
+    }
+    'working-pipeline-rule': {
+        # Just ORing them all together causes spurious matches, like 'not' in the middle of a string constant that's not a pipeline.
+        # It does process most other cases roughly as expected, though.
+        'match': '\\b((?i)PIPE(LINE)?|BEGOUTpu|BEGOUT|COMMIT|FANINANY|GETRANGE|LISTPDS|OUTPUT|PIPGFTXT|REVERSE|SQL|STRLITer|STRLIT|UNTAB|BETWEEN|CONFIGURe|FANOUT|HELP|LITERAL|OUTSIDE|PIPINPUT|REXX|SQLCODES|STRNFIND|UPDATE|BFS|CONSole|CONS|FBLOCK|HOLE|Locate|L|OUTSTORE|PIPLOCAT|REXXCMD|STACK|STRTOLAB|URO|BFSDIREC|COPY|FILEBACK|HOSTBYADd|HOSTBYAD|LOOKUP|OVERlay|OVER|PIPOUTP|REXXVARS|STAGENUM|STRWHILE|VAR|BFSQUERY|COUNT|FILEfast|FILE|HOSTBYNAm|HOSTBYNA|MACLIB|OVERSTR|PIPSEL|RUNPIPE|STARMONi|STARMON|SUBCOM|VARLOAD|BFSREPLA|CP|FILERAND|HOSTID|MAXSTRea|PACK|PIPSEVER|SCANRANGe|SCANRANG|STARMSG|SYNChron|SYNCh|VCHAR|ADDPIPE|BFSSTATE|CRC|FILESLOW|HOSTNAME|MCTOASA|PAD|PIPSHORT|SCANSTRIn|SCANSTRI|STARSYS|TAKE|VERIFY|ADDSTREA|BFSXECUT|C14TO38|FILEUPDA|IEBCOPY|MDISKBLK|PAUSE|PIPSTRNO|SCM|STATE|TAPE|VMC|AFTFST|BLOCK|DATECONV|FIND|IMMCMD|MEMBERs|MEMBER|PDSdirec|PDS|PIPSTRST|SELECT|STATEW|TCPCLIENt|TCPCLIEN|WHILELAB|AHELP|BUFFER|DEAL|FMTFST|INSERT|MERGE|PEEKTO|PREDSELe|PREDSEL|SETRC|STEM|TCPDATA|XAB|ALL|BUILDSCR|DEBLOCK|FRLABel|FRLAB|INSIDE|MESSAGE|PICK|PREFACE|SEVER|STORAGE|TCPLISTEn|TCPLISTE|XEDIT|APLDECod|APLDEC|CALLPIPE|DELAY|FRTARGet|FRTARG|INSTORE|NFIND|PIPCMD|PRINTMC|SHORT|STRASMF|STRASMFi|TIMEstam|TIME|XLATE|APLENCod|APLENC|CASEI|DROP|FULLSCRe|FULLSCR|IP2SOCKA|NINSIDE|PIPCMDM|PUNCH|SNAKE|STRASMNF|TOKENIZE|XMSG|APPEND|CHANGE|DUPlicat|DUPl|FULLSCRQ|ISPF|NLOCATE|PIPCOMMT|QSAM|SOCKA2IP|STREAMNU|TOLABel|TOLAB|XPNDHI|ASATOMC|CHOP|ELASTIC|FULLSCRS|JOIN|NOCOMMIT|PIPDESC|Query|Q|SORT|STREAMST|TOTARGet|TOTARG|XRANGE|ASMCONT|CMS|EMSG|GATE|JOINCONT|NOT|PIPEPVR|READER|SPECs|SPEC|STRFIND|UDP|ZONE|ASMFIND|COLLATE|ESCAPE|GATHER|JUXTAPOS|NUCEXT|PIPESTOP|READTO|SPILL|STRFRLAB|UNIQue|UNIQ|3270BFRA|ASMNFIND|COMBINE|FANIN|GETfiles|GET|LDRTBLS|OPTCDJ|PIPGFMOD|RESOLVE|SPLIT|STRIP|UNPACK|3270ENC|ASMXPND|COMMAND)\\b(\\s*)'
+        'name': 'support.function.rexx'
+    }
+}
+
+
+#https://www.sitepoint.com/how-to-write-a-syntax-highlighting-package-for-atom/
+#https://manual.macromates.com/en/language_grammars
+#http://www.regular-expressions.info/characters.html
