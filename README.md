@@ -1,6 +1,6 @@
 # language-zvm-rexx package
 
-Atom editor package that adds language syntax highlighting for z/VM CMS NAMES files.
+Atom editor package that adds language syntax highlighting for z/VM Rexx files.
 
 ![Screenshot: editing DMSWSXIA EXEC, copied from  MAINT 193](https://raw.githubusercontent.com/openmainframeproject/atompkg-language-zvm-rexx/master/Screenshot.PNG)
 
