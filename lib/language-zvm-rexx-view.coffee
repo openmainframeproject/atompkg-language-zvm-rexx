@@ -20,7 +20,7 @@ class LanguageZvmRexxView
     message.appendChild(list)
 
     item1 = document.createElement('li')
-    item1.textContent = "The package has been activated; ??? files should have visible syntax highlighting."
+    item1.textContent = "The package has been activated; Rexx files should have visible syntax highlighting."
     list.appendChild(item1)
 
     # TODO: Allow any click to close the modal "window" pop-up
