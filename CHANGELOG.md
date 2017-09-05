@@ -1,4 +1,4 @@
-## 0.5.1
+## 0.5.2
 * Toggle command improved; click anywhere to hide its modal panel
 * Fix one message text (??? >> Rexx)
 
