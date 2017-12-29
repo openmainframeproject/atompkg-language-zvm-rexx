@@ -1,5 +1,5 @@
 ## 0.5.3
-* Add snippets for if/then/else, select/when/otherwise, procedure 
+* Add snippets for if/then/else, select/when/otherwise, procedure
 
 ## 0.5.2
 * Toggle command improved; click anywhere to hide its modal panel
