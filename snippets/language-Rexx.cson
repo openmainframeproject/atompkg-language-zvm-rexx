@@ -1,0 +1,75 @@
+'.source.REXX':
+  # For syntax, see
+  # - readme at https://github.com/atom/snippets
+  # http://flight-manual.atom.io/using-atom/sections/snippets/
+  # $0 acts as a final tab stop.
+
+  # ////////////////////////////////////////////////////////////////////
+  # /* Comment
+  # The comment snippet actually works (tested in 1.19), but it was not
+  # obvious because there was no prompt.  Prompt is there in 1.23.1.
+  # See the following issues for history:
+  # https://github.com/atom/autocomplete-snippets/issues/56
+  # https://github.com/atom/autocomplete-snippets/issues/67
+  'Comment':
+    'prefix': '/*'
+    'body': '/* $1 */$0'
+  # EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+  'Else do/end':
+    'prefix': 'else'
+    'body': """
+      else do
+      \t$1
+      end
+      $0
+    """
+  # IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+  'If do/end':
+    'prefix': 'if'
+    'body': """
+      if ${1:condition} do
+      \t$2
+      end
+      $0
+    """
+  # OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  'Otherwise clause':
+    'prefix': 'otherwise'
+    'body': """
+    otherwise do
+        \t$1
+      end /* Otherwise */
+    """
+  # PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+  'Procedure statement':
+    'prefix': 'procedure'
+    'body': """
+    ${1:Name} : procedure expose ${2:variable names}
+        \t$0
+    end /* ${1:Name} */
+    """
+  # SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+  'Select':
+    'prefix': 'select'
+    'body': """
+    select
+    when ${1:condition} do
+        \t$2
+      end /* when */
+    otherwise do
+        \t
+      end /* otherwise */
+    end /* select */
+    """
+  # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+  '/* TODO: ... */':
+    'prefix': 'todo'
+    'body': '/* TODO: ${1:text} */$0'
+  # WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWw
+  'When clause':
+    'prefix': 'when'
+    'body': """
+    when ${1:condition} do
+        \t$2
+      end /* when */
+    """

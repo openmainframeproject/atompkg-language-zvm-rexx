@@ -1,6 +1,9 @@
+## 0.5.3
+* Add snippets for if/then/else, select/when/otherwise, procedure
+
 ## 0.5.2
 * Toggle command improved; click anywhere to hide its modal panel
-* Fix one message text (??? >> Rexx)
+* Fix one message text (??? >> Rexx, in the message text)
 
 ## 0.5.0 - First Release
 * Complete z/VM 6.4 Rexx grammar implemented except for the following
