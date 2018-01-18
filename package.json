@@ -1,7 +1,7 @@
 {
   "name": "language-zvm-rexx",
   "main": "./lib/language-zvm-rexx",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Syntax highlighting for z/VM Rexx files, ala the z/VM 6.4 Rexx Reference publication",
   "keywords": [
     "language",
