@@ -1,3 +1,6 @@
+## 0.5.4
+* Fix snippets for if/then/else, select/when/otherwise (add "then" to each)
+
 ## 0.5.3
 * Add snippets for if/then/else, select/when/otherwise, procedure
 
