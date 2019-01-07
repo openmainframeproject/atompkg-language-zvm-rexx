@@ -16,7 +16,7 @@ The contributor role is the starting role for anyone participating in the projec
 
 ## Committer
 
-The committer role enables the participation to commit code directly to the repository, but also comes with the responsibility of being a responsible leader in the community.
+The committer role enables the contributor to commit code directly to the repository, but also comes with the responsibility of being a responsible leader in the community.
 
 ### Process for becoming a committer
 
