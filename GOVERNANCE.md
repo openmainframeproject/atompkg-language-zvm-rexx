@@ -1,6 +1,6 @@
 # Overview
 
-This project aims to be governed in a transparent, accessible way for the benefit of the community. All participation in this project is open and not bound to corporate affilation. Participants all our bound the project's Code of Conduct.
+This project aims to be governed in a transparent, accessible way for the benefit of the community. All participation in this project is open and not bound to corporate affilation. Participants are bound the project's [Code of Conduct](CODE_OF_CONDUCT.md).
 
 # Project roles
 
@@ -12,7 +12,7 @@ The contributor role is the starting role for anyone participating in the projec
 
 * Review the CONTRIBUTING.md guidelines to ensure your contribution is inline with the project's coding and styling guidelines.
 * Submit your code as a PR with the appropriate DCO signoff
-* Have you submission approved by the committer(s) and merged into the codebase.
+* Have your submission approved by the committer(s) and merged into the codebase.
 
 ## Committer
 
@@ -31,7 +31,7 @@ The committer role enables the participation to commit code directly to the repo
 * Monitor Slack (delayed response is perfectly acceptable).
 * Triage GitHub issues and perform pull request reviews for other committers and the community.
 * Make sure that ongoing PRs are moving forward at the right pace or closing them.
-* In general continue to be willing to spend at least 25% of ones time working on the project (~1.25 business days per week).
+* In general continue to be willing to spend at least 25% of one's time working on the project (~1.25 business days per week).
 
 ### When does a committer lose committer status
 
@@ -56,7 +56,7 @@ be resolved by voting. The voting process is a simple majority in which each com
 
 # Communication
 
-This project, just like all of open source, is a global community. In addition to the Code of Conduct, this project will:
+This project, just like all of open source, is a global community. In addition to the [Code of Conduct](CODE_OF_CONDUCT.md), this project will:
 
 * Keep all communucation on open channels ( mailing list, forums, chat ).
 * Be respectful of time and language differences between community members ( such as scheduling meetings, email/issue responsiveness, etc ).
