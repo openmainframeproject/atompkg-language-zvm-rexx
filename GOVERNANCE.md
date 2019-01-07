@@ -27,7 +27,6 @@ The committer role enables the contributor to commit code directly to the reposi
 
 ### Committer responsibilities
 
-* Monitor any email aliases the project establishes or uses.
 * Monitor Slack (delayed response is perfectly acceptable).
 * Triage GitHub issues and perform pull request reviews for other committers and the community.
 * Make sure that ongoing PRs are moving forward at the right pace or closing them.
