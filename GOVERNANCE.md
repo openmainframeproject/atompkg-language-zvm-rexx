@@ -1,6 +1,6 @@
 # Overview
 
-This project aims to be governed in a transparent, accessible way for the benefit of the community. All participation in this project is open and not bound to corporate affilation. Participants are bound the project's [Code of Conduct](CODE_OF_CONDUCT.md).
+This project aims to be governed in a transparent, accessible way for the benefit of the community. All participation in this project is open and not bound to corporate affilation. Participants are bound to the project's [Code of Conduct](CODE_OF_CONDUCT.md).
 
 # Project roles
 
@@ -27,7 +27,7 @@ The committer role enables the participation to commit code directly to the repo
 
 ### Committer responsibilities
 
-* Monitor email aliases.
+* Monitor any email aliases the project establishes or uses.
 * Monitor Slack (delayed response is perfectly acceptable).
 * Triage GitHub issues and perform pull request reviews for other committers and the community.
 * Make sure that ongoing PRs are moving forward at the right pace or closing them.
