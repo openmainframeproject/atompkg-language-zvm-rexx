@@ -1,3 +1,6 @@
+## 0.5.5
+* Change EDL scope name to match the imported rules, so snippets work in EDL file types too
+
 ## 0.5.4
 * Fix snippets for if/then/else, select/when/otherwise (add "then" to each)
 
