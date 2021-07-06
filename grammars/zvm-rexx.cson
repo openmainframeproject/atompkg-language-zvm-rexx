@@ -134,7 +134,7 @@
       ]
     },
     'simple-other-keyword-instruction-rule': {
-      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper)\\b'
+      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper|lower|value|with)\\b'
       'name': 'keyword.other.rexx'
     },
     'simple-control-keyword-instruction-rule': {
