@@ -84,8 +84,7 @@
     'label-rule': {
         # Handles only the simplest case: optional whitespace, symbol, optional whitespace, colon
         # TODO: Try to handle additional cases, like end-comment preceding label on same source line
-        # TODO: add cent sign to allowed characters
-        'match': '\\s*[A-za-z0-9@#$.!?]+\\s*:'
+        'match': '\\s*[A-za-z0-9@₵#$.!?]+\\s*:'
         'name': 'entity.name.rexx'
     },
     'single-quoted-string-rule': {
@@ -180,7 +179,7 @@
     },
     # TODO: Consider breaking parse value into a separate rule, to highlight optional WITH sub-keyword
     'parse-keyword-instruction-rule': {
-      'match': '\\b((?i)parse)(\\s+((?i)upper))?\\s+((?i)arg|external|linein|numeric|pull|source|value|var|version)\\s+'
+      'match': '\\b((?i)parse)(\\s+((?i)upper|lower|caseless))?\\s+((?i)arg|external|linein|numeric|pull|source|value|var|version)\\s+'
       'name': 'keyword.other.rexx'
     },
     'procedure-keyword-instruction-rule': {
@@ -221,24 +220,6 @@
 }
 
 'holding-area-repository': {
-    # This rule is carefully(?) constructed to only handle 'do name=expri ...' loops.
-    # The simplest repetitive loop 'do expr' only needs 'do' highlighted, and that's handled in the 'simple keyword' rule
-    # Uses 'captures' to highlight only the reserved words (do, by, for, to, while, until)
-    # The for/by/to expressions are uncaptured because of their groups are (?:...) instead of (...)
-    # TODO: Change to begin/end?  All of the expressions lose their "other" highlighting (strings, numbers).
-    # Rule is disabled (by placing it in this unused object 'holding-area-repository') since the loss of
-    # reserved word highlighting is less-bad than the loss of the string/number highlighting in the expressions.
-    # Also DID try re-ordering the top level patterns[] so the number-rule ran after this rule; no help with lost highlighting.
-    'do-repetitive-rule': {
-      'match': '\\b(((?i)do))\\s+(?:[A-za-z0-9@#$.!?]+)\\s*=\\s*(?:\\S+)((\\s+(?i)to\\s+)(?:\\S+))?((\\s+(?i)by\\s+)(?:\\S+))?((\\s+(?i)for\\s+)(?:\\S+))?(\\s+((?i)while|until)\\s+)?'
-      'captures': {
-        '2': { 'name': 'keyword.control.rexx'},
-        '4': { 'name': 'keyword.control.rexx'},
-        '6': { 'name': 'keyword.control.rexx'},
-        '8': { 'name': 'keyword.control.rexx'},
-        '10': { 'name': 'keyword.control.rexx'},
-      }
-    },
     'work-in-progress-pipeline-rule': {
         # Only call this within the context of a string (which might be a pipeline invocation)
         # Should be PIPE[LINE] *followed by* an optional (options) then a sequence of stages.
