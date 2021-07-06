@@ -62,8 +62,7 @@
 'repository': {
     'number-rule': {
         # Arwe: note that Rexx numbers are more general, e.g. E notation/signs
-        # TODO: Handle more/general Rexx number formats
-        'match': '\\b(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))\\b'
+        'match': '\\b(([0-9]+)(\\.[0-9]+)?)\\b'
         'name': 'constant.numeric.rexx'
     },
     'comment-rule': { # Comments, including nested comments
@@ -137,9 +136,8 @@
       'match': '\\b((?i)call|do|end|exit|if|then|else|interpret|iterate|return|select|when|otherwise)\\b'
       'name': 'keyword.control.rexx'
     },
-        # TODO: add cent sign to allowed characters
     'targeted-control-keyword-instruction-rule': {
-      'match': '\\b((?i)call|iterate|leave|signal)(\\s+([A-za-z0-9@#$.!?]+))?\\b'
+      'match': '\\b((?i)call|iterate|leave|signal)(\\s+([A-za-z0-9@#₵$.!?]+))?\\b'
       'captures': {
         '1': { 'name': 'keyword.control.rexx'},
         '2': { 'name': 'entity.name.rexx'},
@@ -201,10 +199,9 @@
       'match': '\\b((?i)rc|result|sigl)\\b'
       'name': 'support.variable.rexx'
     },
-    # TODO: add cent sign to allowed characters
     # "name" followed by open-parenthesis with NO intervening whitespace is Rexx's definition of a function call
     'function-names-rule': {
-      'match': '\\b([A-za-z0-9@#$.!?]+)(\\()'
+      'match': '\\b([A-za-z0-9@#₵$.!?]+)(\\()'
       'captures': {
         '1': { 'name': 'entity.name.function.rexx'},
         '2': { 'name': 'punctuation.definition.parameters.begin.rexx'},
