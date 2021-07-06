@@ -24,10 +24,8 @@
     { 'include': '#single-quoted-string-rule' },
     { 'include': '#double-quoted-string-rule' },
     { 'include': '#address-keyword-instruction-rule' },
-    { 'include': '#call-off-keyword-instruction-rule' },
-    { 'include': '#call-on-keyword-instruction-rule' },
-    { 'include': '#signal-off-keyword-instruction-rule' },
-    { 'include': '#signal-on-keyword-instruction-rule' },
+    { 'include': '#call-keyword-instruction-rule' },
+    { 'include': '#signal-keyword-instruction-rule' },
     { 'include': '#signal-value-keyword-instruction-rule' },
     { 'include': '#numeric-digits-keyword-instruction-rule' },
     { 'include': '#numeric-form-keyword-instruction-rule' },
@@ -147,27 +145,21 @@
       'match': '\\b((?i)address)\\s+((?i)value|cmsmixed|cms|command)?'
       'name': 'keyword.other.rexx'
     },
-    # TODO: Look into combining call on/off by exploiting regex lookahead
-    #       (if 'on' matched then allow 'name')
-    'call-off-keyword-instruction-rule': {
-      'match': '\\b((?i)call)\\s+((?i)off)\\s+((?i)error|halt|failure|notready)'
-      'name': 'keyword.control.rexx'
+    'call-keyword-instruction-rule': {
+      'match': '\\b((?i)call)\\s+((((?i)off)\\s+((?i)error|halt|failure|notready))|(((?i)on)\\s+((?i)error|halt|failure|notready)(\\s+((?i)name))?\\s+))'
+      'captures':
+        '0':
+          'name': 'keyword.control.rexx'
+        '9':
+          'name': 'entity.name.rexx'
     },
-    # TODO: Use captures to highlight name differently
-    'call-on-keyword-instruction-rule': {
-      'match': '\\b((?i)call)\\s+((?i)on)\\s+((?i)error|halt|failure|notready)(\\s+((?i)name))?\\s+'
-      'name': 'keyword.control.rexx'
-    },
-    # TODO: Look into combining signal on/off by exploiting regex lookahead
-    #       (if 'on' matched then allow 'name')
-    'signal-off-keyword-instruction-rule': {
-      'match': '\\b((?i)signal)\\s+((?i)off)\\s+((?i)error|halt|failure|notready|novalue|syntax)'
-      'name': 'keyword.control.rexx'
-    },
-    # TODO: Use captures to highlight name differently
-    'signal-on-keyword-instruction-rule': {
-      'match': '\\b((?i)signal)\\s+((?i)on)\\s+((?i)error|halt|failure|notready|novalue|syntax)(\\s+((?i)name))?\\s+'
-      'name': 'keyword.control.rexx'
+    'signal-keyword-instruction-rule': {
+      'match': '\\b((?i)signal)\\s+((((?i)off)\\s+((?i)error|halt|failure|notready|novalue|syntax))|(((?i)on)\\s+((?i)error|halt|failure|notready|novalue|syntax)(\\s+((?i)name))?\\s+))'
+      'captures':
+        '0':
+          'name': 'keyword.control.rexx'
+        '10':
+          'name': 'entity.name.rexx'
     },
     # TODO: See if "signal label" syntax is distinguishable from signal expression, highlight label if so
     'signal-value-keyword-instruction-rule': {
