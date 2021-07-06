@@ -35,7 +35,7 @@
     # More generic rules last
     { 'include': '#targeted-control-keyword-instruction-rule' },
     { 'include': '#do-end-rule' },
-    # TODO: select
+    { 'include': '#select-rule' },
     { 'include': '#simple-control-keyword-instruction-rule' },
     { 'include': '#simple-other-keyword-instruction-rule' },
     { 'include': '#special-variables-rule' },
@@ -83,8 +83,7 @@
     },
     'label-rule': {
         # Handles only the simplest case: optional whitespace, symbol, optional whitespace, colon
-        # TODO: Try to handle additional cases, like end-comment preceding label on same source line
-        'match': '\\s*[A-za-z0-9@₵#$.!?]+\\s*:'
+        'match': '(\\*\\/)?\\s*[A-za-z0-9@₵#$.!?]+\\s*:'
         'name': 'entity.name.rexx'
     },
     'single-quoted-string-rule': {
@@ -213,6 +212,19 @@
         { include = "$self" }
       ]
       'end': '\\b((?i)end)'
+      'endCaptures':
+        '0':
+          'name': 'keyword.control.rexx'
+    },
+    'select-rule': {
+      'begin': '((?i)select)'
+      'beginCaptures':
+        '0':
+          'name': 'keyword.control.rexx'
+      'patterns': [
+        { include = "$self" }
+      ]
+      'end': '((?i)end)'
       'endCaptures':
         '0':
           'name': 'keyword.control.rexx'
