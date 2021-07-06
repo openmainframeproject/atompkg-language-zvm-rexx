@@ -36,15 +36,12 @@
     { 'include': '#procedure-keyword-instruction-rule' },
     # More generic rules last
     { 'include': '#targeted-control-keyword-instruction-rule' },
-    # TODO: DO/end
-    { 'include': '#do-forever-rule' },
-    { 'include': '#do-repetitive-rule' },
+    { 'include': '#do-end-rule' },
     # TODO: select
     { 'include': '#simple-control-keyword-instruction-rule' },
     { 'include': '#simple-other-keyword-instruction-rule' },
     { 'include': '#special-variables-rule' },
-    { 'include': '#function-names-rule' },
-    { 'include': '#operators-rule' },
+    { 'include': '#function-names-rule' }
 ]
 
 'holding-area-patterns': [
@@ -204,10 +201,6 @@
       'match': '\\b((?i)rc|result|sigl)\\b'
       'name': 'support.variable.rexx'
     },
-    'operators-rule': {
-      'match': '='
-      'name': 'keyword.operator.rexx'
-    },
     # TODO: add cent sign to allowed characters
     # "name" followed by open-parenthesis with NO intervening whitespace is Rexx's definition of a function call
     'function-names-rule': {
@@ -217,10 +210,25 @@
         '2': { 'name': 'punctuation.definition.parameters.begin.rexx'},
       }
     },
-    'do-forever-rule': {
-      'match': '\\b((?i)do)\\s+((?i)forever)(\\s+((?i)while|until)\\s+)?'
-      'name': 'keyword.control.rexx'
-    },
+    'do-end-rule': {
+      'begin': '\\b((?i)do\\s+)((?i)forever\\s+)?((?i)(while|until))?([0-9]+)?'
+      'beginCaptures':
+        '1':
+          'name': 'keyword.control.rexx'
+        '2':
+          'name': 'keyword.control.rexx'
+        '4':
+          'name': 'keyword.control.rexx'
+        '5':
+          'name': 'numeric.constant.rexx'
+      'patterns': [
+        { include = "$self" }
+      ]
+      'end': '\\b((?i)end)'
+      'endCaptures':
+        '0':
+          'name': 'keyword.control.rexx'
+    }
 }
 
 'holding-area-repository': {
