@@ -7,8 +7,6 @@
 # After editing this file, CTL-SHIFT-F5 or C-S-P window:reload to update the active editor with the revised grammar.
 # editor:log-cursor-scope to see which selectors (example: comment.block.rexx) the grammar applies at the cursor's location.
 
-# Todo: highlight commas, end parens, etc.  Adding a \\b rule really hosed things, no matter its placement.
-
 'scopeName': 'source.REXX'
 'name': 'REXX'
 # VMDT is used by the VM Dump Tool for files written in Rexx
@@ -21,6 +19,7 @@
     { 'include': '#comment-rule' },
     { 'include': '#number-rule' },
     { 'include': '#label-rule' },
+    { 'include': '#parenthesis-rule' },
     { 'include': '#single-quoted-string-rule' },
     { 'include': '#double-quoted-string-rule' },
     { 'include': '#address-keyword-instruction-rule' },
@@ -85,6 +84,16 @@
         # Handles only the simplest case: optional whitespace, symbol, optional whitespace, colon
         'match': '(\\*\\/)?\\s*[A-za-z0-9@₵#$.!?]+\\s*:'
         'name': 'entity.name.rexx'
+    },
+    'parenthesis-rule': {
+      'begin': '\\('
+      'beginCaptures':
+          '0':
+              'name': 'punctuation.definition.parens.begin.rexx'
+      'end': '\\)'
+      'endCaptures':
+          '0':
+              'name': 'punctuation.definition.parens.end.rexx'
     },
     'single-quoted-string-rule': {
       # No need to handle embedded escaped quotes as a special case.
@@ -191,11 +200,8 @@
     },
     # "name" followed by open-parenthesis with NO intervening whitespace is Rexx's definition of a function call
     'function-names-rule': {
-      'match': '\\b([A-za-z0-9@#₵$.!?]+)(\\()'
-      'captures': {
-        '1': { 'name': 'entity.name.function.rexx'},
-        '2': { 'name': 'punctuation.definition.parameters.begin.rexx'},
-      }
+      'match': '\\b([A-za-z0-9@#₵$.!?]+)'
+      'name': 'entity.name.function.rexx'
     },
     'do-end-rule': {
       'begin': '\\b((?i)do\\s+)((?i)forever\\s+)?((?i)(while|until))?([0-9]+)?'
