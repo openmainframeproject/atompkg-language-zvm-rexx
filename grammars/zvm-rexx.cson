@@ -38,6 +38,7 @@
     { 'include': '#simple-control-keyword-instruction-rule' },
     { 'include': '#simple-other-keyword-instruction-rule' },
     { 'include': '#special-variables-rule' },
+    { 'include': '#functions-names-rule' },
     { 'include': '#variable-names-rule' }
 ]
 
@@ -138,7 +139,7 @@
       'name': 'keyword.other.rexx'
     },
     'simple-control-keyword-instruction-rule': {
-      'match': '\\b((?i)call|do|end|exit|if|then|else|interpret|iterate|return|select|when|otherwise)\\b'
+      'match': '\\b((?i)call|do|end|exit|if|then|else|interpret|iterate|return|select|when|otherwise|to|by|for)\\b'
       'name': 'keyword.control.rexx'
     },
     'targeted-control-keyword-instruction-rule': {
@@ -200,6 +201,12 @@
     'variable-names-rule': {
       'match': '\\b([A-za-z0-9@#₵$.!?]+)'
       'name': 'variable.other.rexx'
+    },
+    'functions-names-rule': {
+      'match': '\\b([A-za-z0-9@#₵$.!?]+)(\\()'
+      'captures':
+        '1':
+          'name': 'entity.name.function.rexx'
     },
     'do-end-rule': {
       'begin': '\\b((?i)do\\s+)((?i)forever\\s+)?((?i)(while|until))?([0-9]+)?'
