@@ -7,8 +7,6 @@
 # After editing this file, CTL-SHIFT-F5 or C-S-P window:reload to update the active editor with the revised grammar.
 # editor:log-cursor-scope to see which selectors (example: comment.block.rexx) the grammar applies at the cursor's location.
 
-# Todo: highlight commas, end parens, etc.  Adding a \\b rule really hosed things, no matter its placement.
-
 'scopeName': 'source.REXX'
 'name': 'REXX'
 # VMDT is used by the VM Dump Tool for files written in Rexx
@@ -21,13 +19,12 @@
     { 'include': '#comment-rule' },
     { 'include': '#number-rule' },
     { 'include': '#label-rule' },
+    { 'include': '#parenthesis-rule' },
     { 'include': '#single-quoted-string-rule' },
     { 'include': '#double-quoted-string-rule' },
     { 'include': '#address-keyword-instruction-rule' },
-    { 'include': '#call-off-keyword-instruction-rule' },
-    { 'include': '#call-on-keyword-instruction-rule' },
-    { 'include': '#signal-off-keyword-instruction-rule' },
-    { 'include': '#signal-on-keyword-instruction-rule' },
+    { 'include': '#call-keyword-instruction-rule' },
+    { 'include': '#signal-keyword-instruction-rule' },
     { 'include': '#signal-value-keyword-instruction-rule' },
     { 'include': '#numeric-digits-keyword-instruction-rule' },
     { 'include': '#numeric-form-keyword-instruction-rule' },
@@ -36,15 +33,13 @@
     { 'include': '#procedure-keyword-instruction-rule' },
     # More generic rules last
     { 'include': '#targeted-control-keyword-instruction-rule' },
-    # TODO: DO/end
-    { 'include': '#do-forever-rule' },
-    { 'include': '#do-repetitive-rule' },
-    # TODO: select
+    { 'include': '#do-end-rule' },
+    { 'include': '#select-rule' },
     { 'include': '#simple-control-keyword-instruction-rule' },
     { 'include': '#simple-other-keyword-instruction-rule' },
     { 'include': '#special-variables-rule' },
-    { 'include': '#function-names-rule' },
-    { 'include': '#operators-rule' },
+    { 'include': '#functions-names-rule' },
+    { 'include': '#variable-names-rule' }
 ]
 
 'holding-area-patterns': [
@@ -65,8 +60,7 @@
 'repository': {
     'number-rule': {
         # Arwe: note that Rexx numbers are more general, e.g. E notation/signs
-        # TODO: Handle more/general Rexx number formats
-        'match': '\\b(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))\\b'
+        'match': '\\b(([0-9]+)(\\.[0-9]+)?)\\b'
         'name': 'constant.numeric.rexx'
     },
     'comment-rule': { # Comments, including nested comments
@@ -89,10 +83,18 @@
     },
     'label-rule': {
         # Handles only the simplest case: optional whitespace, symbol, optional whitespace, colon
-        # TODO: Try to handle additional cases, like end-comment preceding label on same source line
-        # TODO: add cent sign to allowed characters
-        'match': '\\s*[A-za-z0-9@#$.!?]+\\s*:'
+        'match': '(\\*\\/)?\\s*[A-za-z0-9@₵#$.!?]+\\s*:'
         'name': 'entity.name.rexx'
+    },
+    'parenthesis-rule': {
+      'begin': '\\('
+      'beginCaptures':
+          '0':
+              'name': 'punctuation.definition.parens.begin.rexx'
+      'end': '\\)'
+      'endCaptures':
+          '0':
+              'name': 'punctuation.definition.parens.end.rexx'
     },
     'single-quoted-string-rule': {
       # No need to handle embedded escaped quotes as a special case.
@@ -133,16 +135,15 @@
       ]
     },
     'simple-other-keyword-instruction-rule': {
-      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper)\\b'
+      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper|lower|value|with|label)\\b'
       'name': 'keyword.other.rexx'
     },
     'simple-control-keyword-instruction-rule': {
-      'match': '\\b((?i)call|do|end|exit|if|then|else|interpret|iterate|return|select|when|otherwise)\\b'
+      'match': '\\b((?i)call|do|end|exit|if|then|else|interpret|iterate|return|select|when|otherwise|to|by|for)\\b'
       'name': 'keyword.control.rexx'
     },
-        # TODO: add cent sign to allowed characters
     'targeted-control-keyword-instruction-rule': {
-      'match': '\\b((?i)call|iterate|leave|signal)(\\s+([A-za-z0-9@#$.!?]+))?\\b'
+      'match': '\\b((?i)call|iterate|leave|signal)(\\s+([A-za-z0-9@#₵$.!?]+))?\\b'
       'captures': {
         '1': { 'name': 'keyword.control.rexx'},
         '2': { 'name': 'entity.name.rexx'},
@@ -152,29 +153,22 @@
       'match': '\\b((?i)address)\\s+((?i)value|cmsmixed|cms|command)?'
       'name': 'keyword.other.rexx'
     },
-    # TODO: Look into combining call on/off by exploiting regex lookahead
-    #       (if 'on' matched then allow 'name')
-    'call-off-keyword-instruction-rule': {
-      'match': '\\b((?i)call)\\s+((?i)off)\\s+((?i)error|halt|failure|notready)'
-      'name': 'keyword.control.rexx'
+    'call-keyword-instruction-rule': {
+      'match': '\\b((?i)call)\\s+((((?i)off)\\s+((?i)error|halt|failure|notready))|(((?i)on)\\s+((?i)error|halt|failure|notready)(\\s+((?i)name))?\\s+))'
+      'captures':
+        '0':
+          'name': 'keyword.control.rexx'
+        '9':
+          'name': 'entity.name.rexx'
     },
-    # TODO: Use captures to highlight name differently
-    'call-on-keyword-instruction-rule': {
-      'match': '\\b((?i)call)\\s+((?i)on)\\s+((?i)error|halt|failure|notready)(\\s+((?i)name))?\\s+'
-      'name': 'keyword.control.rexx'
+    'signal-keyword-instruction-rule': {
+      'match': '\\b((?i)signal)\\s+((((?i)off)\\s+((?i)error|halt|failure|notready|novalue|syntax))|(((?i)on)\\s+((?i)error|halt|failure|notready|novalue|syntax)(\\s+((?i)name))?\\s+))'
+      'captures':
+        '0':
+          'name': 'keyword.control.rexx'
+        '10':
+          'name': 'entity.name.rexx'
     },
-    # TODO: Look into combining signal on/off by exploiting regex lookahead
-    #       (if 'on' matched then allow 'name')
-    'signal-off-keyword-instruction-rule': {
-      'match': '\\b((?i)signal)\\s+((?i)off)\\s+((?i)error|halt|failure|notready|novalue|syntax)'
-      'name': 'keyword.control.rexx'
-    },
-    # TODO: Use captures to highlight name differently
-    'signal-on-keyword-instruction-rule': {
-      'match': '\\b((?i)signal)\\s+((?i)on)\\s+((?i)error|halt|failure|notready|novalue|syntax)(\\s+((?i)name))?\\s+'
-      'name': 'keyword.control.rexx'
-    },
-    # TODO: See if "signal label" syntax is distinguishable from signal expression, highlight label if so
     'signal-value-keyword-instruction-rule': {
       'match': '\\b((?i)signal)(\\s+((?i)value))?\\b'
       'name': 'keyword.other.rexx'
@@ -191,9 +185,8 @@
       'match': '\\b((?i)numeric)\\s+((?i)fuzz)\\b'
       'name': 'keyword.other.rexx'
     },
-    # TODO: Consider breaking parse value into a separate rule, to highlight optional WITH sub-keyword
     'parse-keyword-instruction-rule': {
-      'match': '\\b((?i)parse)(\\s+((?i)upper))?\\s+((?i)arg|external|linein|numeric|pull|source|value|var|version)\\s+'
+      'match': '\\b((?i)parse)(\\s+((?i)upper|lower|caseless))?\\s+((?i)arg|external|linein|numeric|pull|source|value|var|version)\\s+'
       'name': 'keyword.other.rexx'
     },
     'procedure-keyword-instruction-rule': {
@@ -204,44 +197,52 @@
       'match': '\\b((?i)rc|result|sigl)\\b'
       'name': 'support.variable.rexx'
     },
-    'operators-rule': {
-      'match': '='
-      'name': 'keyword.operator.rexx'
-    },
-    # TODO: add cent sign to allowed characters
     # "name" followed by open-parenthesis with NO intervening whitespace is Rexx's definition of a function call
-    'function-names-rule': {
-      'match': '\\b([A-za-z0-9@#$.!?]+)(\\()'
-      'captures': {
-        '1': { 'name': 'entity.name.function.rexx'},
-        '2': { 'name': 'punctuation.definition.parameters.begin.rexx'},
-      }
+    'variable-names-rule': {
+      'match': '\\b([A-za-z0-9@#₵$.!?]+)'
+      'name': 'variable.other.rexx'
     },
-    'do-forever-rule': {
-      'match': '\\b((?i)do)\\s+((?i)forever)(\\s+((?i)while|until)\\s+)?'
-      'name': 'keyword.control.rexx'
+    'functions-names-rule': {
+      'match': '\\b([A-za-z0-9@#₵$.!?]+)(\\()'
+      'captures':
+        '1':
+          'name': 'entity.name.function.rexx'
     },
+    'do-end-rule': {
+      'begin': '\\b((?i)do\\s+)((?i)forever\\s+)?((?i)(while|until))?([0-9]+)?'
+      'beginCaptures':
+        '1':
+          'name': 'keyword.control.rexx'
+        '2':
+          'name': 'keyword.control.rexx'
+        '4':
+          'name': 'keyword.control.rexx'
+        '5':
+          'name': 'numeric.constant.rexx'
+      'patterns': [
+        { include = "$self" }
+      ]
+      'end': '\\b((?i)end)'
+      'endCaptures':
+        '0':
+          'name': 'keyword.control.rexx'
+    },
+    'select-rule': {
+      'begin': '((?i)select)'
+      'beginCaptures':
+        '0':
+          'name': 'keyword.control.rexx'
+      'patterns': [
+        { include = "$self" }
+      ]
+      'end': '((?i)end)'
+      'endCaptures':
+        '0':
+          'name': 'keyword.control.rexx'
+    }
 }
 
 'holding-area-repository': {
-    # This rule is carefully(?) constructed to only handle 'do name=expri ...' loops.
-    # The simplest repetitive loop 'do expr' only needs 'do' highlighted, and that's handled in the 'simple keyword' rule
-    # Uses 'captures' to highlight only the reserved words (do, by, for, to, while, until)
-    # The for/by/to expressions are uncaptured because of their groups are (?:...) instead of (...)
-    # TODO: Change to begin/end?  All of the expressions lose their "other" highlighting (strings, numbers).
-    # Rule is disabled (by placing it in this unused object 'holding-area-repository') since the loss of
-    # reserved word highlighting is less-bad than the loss of the string/number highlighting in the expressions.
-    # Also DID try re-ordering the top level patterns[] so the number-rule ran after this rule; no help with lost highlighting.
-    'do-repetitive-rule': {
-      'match': '\\b(((?i)do))\\s+(?:[A-za-z0-9@#$.!?]+)\\s*=\\s*(?:\\S+)((\\s+(?i)to\\s+)(?:\\S+))?((\\s+(?i)by\\s+)(?:\\S+))?((\\s+(?i)for\\s+)(?:\\S+))?(\\s+((?i)while|until)\\s+)?'
-      'captures': {
-        '2': { 'name': 'keyword.control.rexx'},
-        '4': { 'name': 'keyword.control.rexx'},
-        '6': { 'name': 'keyword.control.rexx'},
-        '8': { 'name': 'keyword.control.rexx'},
-        '10': { 'name': 'keyword.control.rexx'},
-      }
-    },
     'work-in-progress-pipeline-rule': {
         # Only call this within the context of a string (which might be a pipeline invocation)
         # Should be PIPE[LINE] *followed by* an optional (options) then a sequence of stages.
