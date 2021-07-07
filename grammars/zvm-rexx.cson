@@ -38,7 +38,7 @@
     { 'include': '#simple-control-keyword-instruction-rule' },
     { 'include': '#simple-other-keyword-instruction-rule' },
     { 'include': '#special-variables-rule' },
-    { 'include': '#function-names-rule' }
+    { 'include': '#variable-names-rule' }
 ]
 
 'holding-area-patterns': [
@@ -134,7 +134,7 @@
       ]
     },
     'simple-other-keyword-instruction-rule': {
-      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper|lower|value|with)\\b'
+      'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper|lower|value|with|label)\\b'
       'name': 'keyword.other.rexx'
     },
     'simple-control-keyword-instruction-rule': {
@@ -168,7 +168,6 @@
         '10':
           'name': 'entity.name.rexx'
     },
-    # TODO: See if "signal label" syntax is distinguishable from signal expression, highlight label if so
     'signal-value-keyword-instruction-rule': {
       'match': '\\b((?i)signal)(\\s+((?i)value))?\\b'
       'name': 'keyword.other.rexx'
@@ -185,7 +184,6 @@
       'match': '\\b((?i)numeric)\\s+((?i)fuzz)\\b'
       'name': 'keyword.other.rexx'
     },
-    # TODO: Consider breaking parse value into a separate rule, to highlight optional WITH sub-keyword
     'parse-keyword-instruction-rule': {
       'match': '\\b((?i)parse)(\\s+((?i)upper|lower|caseless))?\\s+((?i)arg|external|linein|numeric|pull|source|value|var|version)\\s+'
       'name': 'keyword.other.rexx'
@@ -199,9 +197,9 @@
       'name': 'support.variable.rexx'
     },
     # "name" followed by open-parenthesis with NO intervening whitespace is Rexx's definition of a function call
-    'function-names-rule': {
+    'variable-names-rule': {
       'match': '\\b([A-za-z0-9@#₵$.!?]+)'
-      'name': 'entity.name.function.rexx'
+      'name': 'variable.other.rexx'
     },
     'do-end-rule': {
       'begin': '\\b((?i)do\\s+)((?i)forever\\s+)?((?i)(while|until))?([0-9]+)?'
