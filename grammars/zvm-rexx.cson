@@ -1,17 +1,13 @@
-
 # Change summary
 # - Wrote syntax rules based on Walter Church's internal set, then re-wrote
 #   many of them based on:
 #   z/VM 6.4 CMS Commands and Utilities Reference, NAMEFIND command, usage note 3
-
 # After editing this file, CTL-SHIFT-F5 or C-S-P window:reload to update the active editor with the revised grammar.
 # editor:log-cursor-scope to see which selectors (example: comment.block.rexx) the grammar applies at the cursor's location.
-
 'scopeName': 'source.REXX'
 'name': 'REXX'
 # VMDT is used by the VM Dump Tool for files written in Rexx
 'fileTypes': ['REXX','EXEC','EXEC2','VMDT']
-
 'patterns': [
     # Comments are recursively defined (nesting allowed), so include a single
     # recursive rule instead of duplicating the parsing here and then a second
@@ -41,7 +37,6 @@
     { 'include': '#functions-names-rule' },
     { 'include': '#variable-names-rule' }
 ]
-
 'holding-area-patterns': [
     { # Arwe: looks like a sequence number ... why mapped to type?
       'match': '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\\n'
@@ -56,7 +51,6 @@
       'name': 'keyword.control.rexx'
     },
 ]
-
 'repository': {
     'number-rule': {
         # Arwe: note that Rexx numbers are more general, e.g. E notation/signs
@@ -108,16 +102,6 @@
           '0':
               'name': 'punctuation.definition.string.end.rexx'
       'name': 'string.quoted.single.rexx'
-      'patterns': [
-          { #PIPE
-            'include': '#working-pipeline-rule'
-            'name': 'support.function.rexx'
-          },
-          {
-            'include': '#label-rule'
-            'name': 'variable.parameter.rexx'
-          }
-      ]
     },
     'double-quoted-string-rule': {
       # No need to handle embedded escaped quotes as a special case.
@@ -131,16 +115,6 @@
           '0':
               'name': 'punctuation.definition.string.end.rexx'
       'name': 'string.quoted.single.rexx'
-      'patterns': [
-          { #PIPE
-            'include': '#working-pipeline-rule'
-            'name': 'support.function.rexx'
-          },
-          {
-            'include': '#label-rule'
-            'name': 'variable.parameter.rexx'
-          }
-      ]
     },
     'simple-other-keyword-instruction-rule': {
       'match': '\\b((?i)arg|drop|nop|options|pull|push|queue|say|trace|upper|lower|value|with|label)\\b'
@@ -247,30 +221,6 @@
       'endCaptures':
         '0':
           'name': 'keyword.control.rexx'
-    },
-    'working-pipeline-rule': {
-      # Just ORing them all together causes spurious matches, like 'not' in the middle of a string constant that's not a pipeline.
-      # It does process most other cases roughly as expected, though.
-      'match': '\\b((?i)PIPE(LINE)?|<|APPEND|CMD|DISKRAND|FILTERPAc|HLASMERR|MAXSTREA|OUTSIDE|READTO|SPECTUTO|STRNFIND|TRACKDEBl|VMC|ASATOMC|CMS|DISKSLOW|FIND|HOLE|MCTOASA|OUTSTORE
-|RESOLVE|SPILL|STRNLOCAt|TRACKEXPa|VMCDATA|ASMCONT|COLLATE|DISKUPDAt|FITTING|HOSTBYADd|MDISKBLK|OVERlay|RETAB|SPLIT|STRNOTLOc|TRACKREAd|VMCFCLIE
-n|ASMEXPANd|COMBINE|DROP|FLTPACKag|HOSTBYNAm|MDSKBACK|OVERSTR|REVERSE|SQL|STRTOLABe|TRACKSQUi|VMCFDATA|ASMFIND|COMMAND|DUPlicate|FMTFST|HOSTID|M
-DSKBLK|PACK|REXX|SQLCODES|STRUCTRE|TRACKVERi|VMCFLISTe|>|ASMNFIND|COMMIT|ELASTIC|FRLABel|HOSTNAME|MDSKFAST|PAD|REXXCMD|SQLSELECt|STRUCTure|TRACK
-WRIt|VMCLIENT|>>|ASMXPAND|CONFIGURe|EMSG|FROMLABel|HTTPSPLIt|MDSKRAND|PARCEL|REXXVARS|STACK|STRWHILEl|TRACKXPAn|VMCLISTEn|ASMXPND|CONFIGVA|ENBAS
-E64|FROMTARGe|IEBCOPY|MDSKSLOW|PAUSE|RUNPIPE|STAGENUM|STSI|TRANSlate|WAITDEV|BEAT|CONSole|EOFBACK|FRTARGET|IF|MDSKUPDAt|PDSdirect|SCANNER|STARMO
-N|SUBCOM|TRANSLIte|WARP|BEGOUTPU|COPY|EOFREPOR|FTP|IMMCMD|MEMBERs|PEEKTO|SCANRANG|STARMSG|SUBSTRing|TRFREAD|WARPLIST|BETWEEN|COUNT|ESCAPE|FULLSC
-R|INSERT|MERGE|PICK|SCANSTRI|STARSYS|SUSPEND|TRUNCate|WHILELAB|BFS|CP|FANIN|FULLSCRQ|INSIDE|MESSAGE|PIPCMD|SCM|STATE|SYNChroni|UDP|WILDCARD|BFSD
-IRect|CRC|FANINANY|FULLSCRS|INSTORE|MULTVERS|PIPDUMP|SEC2GREG|STATEW|SYNTAX|UNIQue|XAB|BFSEXecut|C14TO38|FANINTWO|GATE|IP2SOCKA|NFIND|PIPESTOP|S
-ELECT|STEM|TAKE|UNPACK|XEDIT|ABBREV|BFSQuery|DAM|FANOUT|GATHER|ISPF|NINSIDE|PIPEVENT|SETRC|STFLe|TAPE|UNTAB|XEDITMSG|ACIGROUP|BFSREPlac|DATECNVT
-|FANOUTWO|GETfiles|ISSUEMSG|NLOCATE|POLISH|SEVER|STGSELEC|TCPCKSUM|UPDATE|XLATE|ADDPIPE|BFSSTATe|DATECONVe|FBAREAD|GETRANGE|JEREMY|NOCOMMIT|PRED
-SELec|SFSBACK|STORAGE|TCPCLIENt|URLDEBLOc|XMSG|ADDRDW|BFSXecute|DEAL|FBAWRITE|GREG2SEC|JOIN|NOEOFBACk|PREFACE|SFSDIRect|STRASMFin|TCPDATA|URLDEC
-ODe|XPNDHI|ADDRSPACe|BLOCK|DEBLOCK|FBLOCK|HELP|JOINCONT|NOT|PREPEND|SFSRANDom|STRASMNFi|TCPLISTEn|URO|XRANGE|ADDSTREA|BROWSE|DELAY|FILEBACK|HFS|JUXTAPOSe|NOTEOFBAc|PRINTMC|SFSU
-PDATe|STREAMNU|TERMinal|UTF|ZONE|ADRSPACE|BRW|DEVINFO|FILEDEScr|HFSDIRect|LDRTBLS|NOTFIND|PUNCH|SHORT|STREAMST|THREEWAY|VAR|3WAY|AFTFST|BUFFER|D
-FSORT|FILEfast|HFSEXecut|LISTPDS|NOTINSIDe|QPDECODE|SNAKE|STRFIND|TIMEstamp|VARDROP|3270BFRA|AGGRC|BUILDSCR|DIAGE4|FILERAND|HFSQuery|LITERAL|NOT
-LOCATe|QPENCODE|SOCKA2IP|STRFRLABe|TOKENISE|VARFETCH|3270ENC|AHELP|CALLPIPE|DIGEST|FILESLOW|HFSREPlac|Locate|NUCEXT|QSAM|SORT|STRFROMLa|TOKENIZE
-|VARLOAD|3277BFRA|ALL|CASEI|DISKBACK|FILETOKen|HFSSTATe|LOOKUP|NUL|Query|SPACE|STRIP|TOLABel|VARSET|3277ENC|ALSERV|CHANGE|DISKfast|FILEUPDAt|HFS
-Xecute|MACLIB|OPTCDJ|RANDOM|SPEC|STRLITera|TOTARGet|VCHAR|64DECODE|APLDECode|CHOP|DISKID|FILLUP|HLASM|MAPMDISK|OUTPUT|READER|SPECREFE|STRLOCate|
-TRACKBLOc|VERIFY|64ENCODE|APLENCode|CKDDEBLO)\\b(\\s*)'
-      'name': 'support.function.rexx'
     }
 }
 
