@@ -11,10 +11,11 @@
   # See the following issues for history:
   # https://github.com/atom/autocomplete-snippets/issues/56
   # https://github.com/atom/autocomplete-snippets/issues/67
-  'Comment':
-    'prefix': '/*'
-    'body': '/* $1 */$0'
-  # EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+  'Block comment':
+    'prefix': 'comment'
+    'body': '/* ${1} */$0'
+  # --------------------------------------------------------------------
   'Else do/end':
     'prefix': 'else'
     'body': """
@@ -23,7 +24,7 @@
       end
       $0
     """
-  # IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+  # --------------------------------------------------------------------
   'If do/end':
     'prefix': 'if'
     'body': """
@@ -32,7 +33,7 @@
       end
       $0
     """
-  # OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  # --------------------------------------------------------------------
   'Otherwise clause':
     'prefix': 'otherwise'
     'body': """
@@ -40,7 +41,7 @@
         \t$1
       end /* Otherwise */
     """
-  # PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+  # --------------------------------------------------------------------
   'Procedure statement':
     'prefix': 'procedure'
     'body': """
@@ -48,7 +49,7 @@
         \t$0
     return /* ${1:Name} */
     """
-  # SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+  # --------------------------------------------------------------------
   'Select':
     'prefix': 'select'
     'body': """
@@ -61,11 +62,11 @@
       end /* otherwise */
     end /* select */
     """
-  # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+  # --------------------------------------------------------------------
   '/* TODO: ... */':
     'prefix': 'todo'
     'body': '/* TODO: ${1:text} */$0'
-  # WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWw
+  # --------------------------------------------------------------------
   'When clause':
     'prefix': 'when'
     'body': """
@@ -73,3 +74,33 @@
         \t$2
       end /* when */
     """
+  # --------------------------------------------------------------------
+  'Print output to console':
+    'prefix': 'say'
+    'body': 'say ${1:output}$0'
+  # --------------------------------------------------------------------
+  'General Repetition do/end':
+    'prefix': 'do/end'
+    'body': """
+      do ${1:conditions}
+          ${2:statements}
+      end
+      $0
+    """
+  # --------------------------------------------------------------------
+  'Function':
+    'prefix': 'function'
+    'body': """
+      ${1:FunctionName}:
+      PARSE ARG ${2:arguments}
+      Return ${3:value}
+      $0
+    """
+  # --------------------------------------------------------------------
+  'Tapping Error':
+    'prefix': 'signal'
+    'body': """
+      signal ${1:on/off} ${2:ErrorCondition}
+      $0
+    """
+  # --------------------------------------------------------------------
