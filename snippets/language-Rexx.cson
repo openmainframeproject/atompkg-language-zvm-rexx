@@ -58,7 +58,7 @@
         \t$2
       end /* when */
     otherwise do
-        \t
+        \t$3
       end /* otherwise */
     end /* select */
     """
@@ -66,14 +66,6 @@
   '/* TODO: ... */':
     'prefix': 'todo'
     'body': '/* TODO: ${1:text} */$0'
-  # --------------------------------------------------------------------
-  'When clause':
-    'prefix': 'when'
-    'body': """
-    when ${1:condition} then do
-        \t$2
-      end /* when */
-    """
   # --------------------------------------------------------------------
   'Print output to console':
     'prefix': 'say'
