@@ -7,7 +7,7 @@
 
 # Separates development tool parameters from the official language definition
 
-'scopeName': 'source.zvm-rexx-edl'
+'scopeName': 'source.zvm-rexx-pipes'
 'name': 'zvm-rexx-edl'
 # SAMPPROF is used sample profiles written in Rexx
 'fileTypes': ['$EXEC','$EXEC2','$VMDT','SAMPPROF']
