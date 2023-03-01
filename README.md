@@ -1,3 +1,5 @@
+**NOTICE: This project is in [Emeritus status](https://tac.openmainframeproject.org/process/lifecycle.html#emeritus-stage) and no longer maintained**
+
 # language-zvm-rexx package
 
 Atom editor package that adds language syntax highlighting for z/VM Rexx files.
